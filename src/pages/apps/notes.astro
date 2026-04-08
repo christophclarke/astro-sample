@@ -1,0 +1,25 @@
+---
+import Base from "../../layouts/Base.astro";
+import NotesApp from "../../components/NotesApp.tsx";
+---
+
+<Base title="Notes" description="A simple notes app built with React inside Astro.">
+  <div style="margin-bottom: 1.5rem;">
+    <h1 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 0.4rem;">Notes</h1>
+    <p style="color: var(--muted); font-size: 0.9rem;">
+      A React app running as an island inside an Astro page. Notes are saved to
+      <code style="background: var(--surface); padding: 0.1em 0.35em; border-radius: 4px; font-size: 0.85em;">localStorage</code>
+      — they'll still be here when you come back.
+    </p>
+  </div>
+
+  <!--
+    client:only="react" skips server-rendering entirely.
+    Use this for anything that needs browser APIs (localStorage, canvas, WebSockets, etc.)
+    or for apps where SSR would add no value.
+
+    Compare to client:load (used on the project filter) which server-renders first
+    then hydrates — better for content that should be visible before JS loads.
+  -->
+  <NotesApp client:only="react" />
+</Base>

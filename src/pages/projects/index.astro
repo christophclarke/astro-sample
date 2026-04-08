@@ -1,0 +1,35 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection } from "astro:content";
+import ProjectFilter from "../../components/ProjectFilter.tsx";
+
+const projects = await getCollection("projects");
+const sorted = projects.sort((a, b) => b.data.year - a.data.year);
+
+// Collect all unique tags across projects
+const allTags = [...new Set(sorted.flatMap((p) => p.data.tags))].sort();
+
+// Serialize to plain objects to pass into the React island
+const projectData = sorted.map((p) => ({
+  slug: p.id,
+  title: p.data.title,
+  description: p.data.description,
+  tags: p.data.tags,
+  year: p.data.year,
+  url: p.data.url,
+}));
+---
+
+<Base title="Projects">
+  <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">Projects</h1>
+  <p style="color: var(--muted); margin-bottom: 2.5rem;">
+    Things I've built. Filter by tag to find what you're looking for.
+  </p>
+
+  <!--
+    client:load is the "island" directive — this React component is the ONLY
+    JavaScript that ships to the browser. Everything else on this page is
+    static HTML. Compare to Django: the rest of the page is "just a template".
+  -->
+  <ProjectFilter client:load projects={projectData} allTags={allTags} />
+</Base>
