@@ -1,0 +1,59 @@
+---
+import Base from "../layouts/Base.astro";
+import { getCollection } from "astro:content";
+
+const projects = await getCollection("projects");
+const recent = projects
+  .sort((a, b) => b.data.year - a.data.year)
+  .slice(0, 3);
+---
+
+<Base title="Home">
+  <section style="margin-bottom: 4rem;">
+    <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; line-height: 1.2;">
+      Hi, I'm <span style="color: var(--accent);">Chris</span>.
+    </h1>
+    <p style="font-size: 1.15rem; color: var(--muted); max-width: 540px; line-height: 1.7;">
+      I build things with Python and the web. This is where I collect the projects
+      worth sharing — tools, experiments, and the occasional side project that got
+      out of hand.
+    </p>
+    <div style="margin-top: 1.75rem; display: flex; gap: 1rem;">
+      <a
+        href="/projects"
+        style="padding: 0.6rem 1.25rem; background: var(--accent); color: white; border-radius: 6px; text-decoration: none; font-size: 0.9rem; font-weight: 600;"
+      >
+        See my projects
+      </a>
+      <a
+        href="https://github.com"
+        style="padding: 0.6rem 1.25rem; border: 1px solid var(--border); color: var(--muted); border-radius: 6px; text-decoration: none; font-size: 0.9rem;"
+      >
+        GitHub
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <h2 style="font-size: 1rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem;">
+      Recent projects
+    </h2>
+    <div style="display: grid; gap: 0.75rem;">
+      {recent.map((project) => (
+        <a
+          href={`/projects/${project.id}`}
+          style="display: flex; justify-content: space-between; align-items: baseline; padding: 0.9rem 1.25rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: inherit;"
+        >
+          <div>
+            <span style="font-weight: 500;">{project.data.title}</span>
+            <span style="margin-left: 1rem; font-size: 0.85rem; color: var(--muted);">{project.data.description}</span>
+          </div>
+          <span style="font-size: 0.8rem; color: var(--muted); flex-shrink: 0; margin-left: 1rem;">{project.data.year}</span>
+        </a>
+      ))}
+    </div>
+    <p style="margin-top: 1rem;">
+      <a href="/projects" style="color: var(--accent); font-size: 0.9rem; text-decoration: none;">View all →</a>
+    </p>
+  </section>
+</Base>

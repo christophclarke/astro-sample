@@ -1,0 +1,92 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Personal portfolio and project showcase." } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      :root {
+        --bg: #0f0f13;
+        --surface: #1a1a22;
+        --border: #2e2e3a;
+        --text: #e2e2e8;
+        --muted: #888899;
+        --accent: #7c6af7;
+        --accent-dim: #4a3fa0;
+        font-family: system-ui, sans-serif;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      nav {
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 2rem;
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+      }
+
+      nav a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color 0.15s;
+      }
+
+      nav a:hover, nav a[aria-current="page"] { color: var(--text); }
+
+      nav .site-name {
+        color: var(--accent);
+        font-weight: 700;
+        font-size: 1rem;
+        margin-right: auto;
+      }
+
+      main {
+        flex: 1;
+        max-width: 860px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+      }
+
+      footer {
+        text-align: center;
+        padding: 1.5rem;
+        color: var(--muted);
+        font-size: 0.8rem;
+        border-top: 1px solid var(--border);
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="/" class="site-name">yourname.dev</a>
+      <a href="/" aria-current={Astro.url.pathname === "/" ? "page" : undefined}>Home</a>
+      <a href="/projects" aria-current={Astro.url.pathname.startsWith("/projects") ? "page" : undefined}>Projects</a>
+      <a href="/apps" aria-current={Astro.url.pathname.startsWith("/apps") ? "page" : undefined}>Apps</a>
+    </nav>
+    <main>
+      <slot />
+    </main>
+    <footer>Built with Astro</footer>
+  </body>
+</html>

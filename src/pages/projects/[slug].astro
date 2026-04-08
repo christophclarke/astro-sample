@@ -1,0 +1,70 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection, render } from "astro:content";
+
+// getStaticPaths tells Astro which pages to generate at build time.
+// Think of it like Django's URL conf, but Astro pre-renders each route
+// to a static HTML file instead of handling it at request time.
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+---
+
+<Base title={project.data.title} description={project.data.description}>
+  <a href="/projects" style="color: var(--muted); text-decoration: none; font-size: 0.85rem;">← All projects</a>
+
+  <div style="margin-top: 2rem; margin-bottom: 2.5rem;">
+    <div style="display: flex; align-items: baseline; gap: 1rem; margin-bottom: 0.5rem;">
+      <h1 style="font-size: 2rem; font-weight: 700;">{project.data.title}</h1>
+      <span style="color: var(--muted); font-size: 0.9rem;">{project.data.year}</span>
+    </div>
+    <p style="color: var(--muted); font-size: 1.05rem; margin-bottom: 1rem;">{project.data.description}</p>
+    <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+      {project.data.tags.map((tag) => (
+        <span style="font-size: 0.75rem; padding: 0.15rem 0.5rem; border-radius: 4px; background: var(--border); color: var(--muted);">
+          {tag}
+        </span>
+      ))}
+    </div>
+  </div>
+
+  {project.data.url && (
+    <p style="margin-bottom: 2rem;">
+      <a
+        href={project.data.url}
+        style="display: inline-flex; align-items: center; gap: 0.4rem; color: var(--accent); text-decoration: none; font-size: 0.9rem; border: 1px solid var(--accent-dim); padding: 0.4rem 0.9rem; border-radius: 6px;"
+      >
+        View on GitHub →
+      </a>
+    </p>
+  )}
+
+  <!-- The Markdown body, rendered to HTML by Astro's Content component -->
+  <div class="prose">
+    <Content />
+  </div>
+</Base>
+
+<style>
+  .prose {
+    line-height: 1.75;
+    color: var(--muted);
+    max-width: 65ch;
+  }
+  .prose p { margin-bottom: 1rem; }
+  .prose h2, .prose h3 { color: var(--text); margin: 1.5rem 0 0.5rem; }
+  .prose a { color: var(--accent); }
+  .prose code {
+    background: var(--surface);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+</style>

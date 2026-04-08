@@ -1,0 +1,16 @@
+---
+import Base from "../../layouts/Base.astro";
+import AppFilter from "../../components/AppFilter.tsx";
+import apps from "../../data/apps";
+
+const allTags = [...new Set(apps.flatMap((a) => a.tags))].sort();
+---
+
+<Base title="Apps" description="Interactive apps and demos.">
+  <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">Apps</h1>
+  <p style="color: var(--muted); margin-bottom: 2.5rem;">
+    Interactive demos and tools. Each one runs as a React island inside Astro.
+  </p>
+
+  <AppFilter client:load apps={apps} allTags={allTags} />
+</Base>
